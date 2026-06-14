@@ -63,7 +63,7 @@ You only need a web browser — no installation, no dependencies.
 
     # Run a local server (recommended, so the alarm audio plays reliably)
     
-    # then open  ** https://nagashree-sakthivel.github.io/raksha-netra/ **
+    # then open https://nagashree-sakthivel.github.io/raksha-netra/
 
 ---
 
