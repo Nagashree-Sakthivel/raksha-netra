@@ -70,14 +70,15 @@ You only need a web browser — no installation, no dependencies.
 ## 📁 Project Structure
 
     RAKSHA-NETRA/
-      
-      app.js                    # All logic: train motion, sensor sim, AI sim, alerts, braking
-      style.css                 # Glassmorphism dark theme + animations
-      system_architecture       # System architecture notes / diagram
-      walkthrough               # Demo walkthrough script
-      implementation_plan.md    # Build / implementation plan
-      Readme                    # This file
-
+  index.html                 # Main app — open this in a browser
+  app.js                     # All logic: train motion, sensor sim, AI sim, alerts, braking
+  css2                       # Stylesheet — glassmorphism dark theme, fonts & animations
+  system_architecture        # System architecture notes / diagram
+  walkthrough                # Demo walkthrough script
+  implementation_plan.md     # Build / implementation plan
+  Screenshots                # Screenshot references for the README
+  RAKSHA-NETRA PPT.pptx      # Pitch deck
+  README.md                  # This file
 ---
 
 ## 🧩 How the Simulation Works
