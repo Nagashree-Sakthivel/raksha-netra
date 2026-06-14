@@ -53,6 +53,9 @@ The logic engine of the simulator:
 
 ---
 
+
+[index.html,app.js,style.css are uploaded separately]
+
 ## Verification Plan
 
 ### Manual Verification
