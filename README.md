@@ -67,23 +67,7 @@ You only need a web browser — no installation, no dependencies.
 
 ---
 
-## 📁 Project Structure
 
-RAKSHA-NETRA
-│
-├── 🌐 index.html
-├── ⚙️ app.js
-├── 🎨 css2.css
-│
-├── 📖 README.md
-├── 📋 implementation_plan.md
-├── 🏗️ system_architecture.md
-├── 🚶 walkthrough.md
-│
-├── 📊 RAKSHA-NETRA PPT.pptx
-└── 📸 Screenshots/
-```
----
 
 ## 🧩 How the Simulation Works
 
@@ -149,13 +133,6 @@ If deployed, the concept scales across the Indian Railways network:
 
 ---
 
-## 🔮 Roadmap
-
-- [ ] Build the physical sensor-node prototype (ESP32 + sensors)
-- [ ] Train and deploy the TinyML classifier on-device
-- [ ] Set up a real LoRa link between two nodes and a gateway
-- [ ] Connect the dashboard to live hardware telemetry
-- [ ] Field test on a miniature physical track model
 
 
 **RAKSHA-NETRA** — because every life on the tracks deserves a guardian watching over it. 🛡️
