@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAKSHA-NETRA | AI-Powered Track Obstruction Detection</title>
+    <!-- Google Fonts for premium design -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Main Application Container -->
+    <div class="app-container">
+        <!-- Header Section -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo-container">
+                    <span class="logo-icon">🛡️</span>
+                    <div class="logo-text">
+                        <h1>RAKSHA-NETRA</h1>
+                        <span class="tagline">Real-Time Track Obstruction Detection System</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Global Status Bar -->
+            <div class="header-status-bar">
+                <div class="status-item">
+                    <span class="status-label">SYSTEM STATE</span>
+                    <span class="status-value active-pulse" id="global-system-status">SECURE</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">ACTIVE SENSORS</span>
+                    <span class="status-value" id="global-active-nodes">2/2 ONLINE</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">LORA NETWORK</span>
+                    <span class="status-value" id="global-lora-signal">STRONG (94%)</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">POWER SUPPLY</span>
+                    <span class="status-value" id="global-power-source">SOLAR HARVEST</span>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <button class="btn btn-primary btn-glow" id="btn-pitch-deck">
+                    <span>💡 HACKATHON PITCH DECK</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Body Grid -->
+        <main class="app-main-grid">
+            
+            <!-- COLUMN 1: SIMULATOR CONTROL STATION -->
+            <section class="grid-col col-simulator">
+                <div class="card glass-card">
+                    <div class="card-header">
+                        <h2>🛠️ DEMO SIMULATION CONTROLLER</h2>
+                        <span class="card-subtitle">Control the physical train & inject obstructions</span>
+                    </div>
+                    
+                    <!-- Visual Track Simulator -->
+                    <div class="track-simulator-box">
+                        <div class="track-status-ribbon" id="track-safety-ribbon">TRACK CLEARED</div>
+                        
+                        <div class="track-container">
+                            <!-- Stations & Markers -->
+                            <div class="station-marker station-left">
+                                <span class="station-lbl">STATION A</span>
+                                <span class="station-km">KM 140.0</span>
+                            </div>
+                            <div class="station-marker station-right">
+                                <span class="station-lbl">STATION B</span>
+                                <span class="station-km">KM 145.0</span>
+                            </div>
+
+                            <!-- Track Rails -->
+                            <div class="rail-line rail-top"></div>
+                            <div class="rail-line rail-bottom"></div>
+                            <div class="rail-sleepers" id="sleepers-container"></div>
+                            
+                            <!-- Sensor Node Markers -->
+                            <div class="node-marker" id="marker-node1" style="left: 30%;">
+                                <div class="node-pin">📡</div>
+                                <span class="node-lbl">Node 1 (KM 141.5)</span>
+                            </div>
+                            <div class="node-marker" id="marker-node2" style="left: 70%;">
+                                <div class="node-pin">📡</div>
+                                <span class="node-lbl">Node 2 (KM 143.5)</span>
+                            </div>
+
+                            <!-- Obstacle Marker -->
+                            <div class="obstacle-marker" id="track-obstacle" style="left: 50%; display: none;">
+                                <div class="obstacle-graphic" id="obstacle-visual-avatar">🐄</div>
+                                <div class="obstacle-ping-wave"></div>
+                            </div>
+
+                            <!-- Moving Train -->
+                            <div class="train-graphic" id="sim-train" style="left: 0%;">
+                                <div class="train-body">
+                                    <div class="train-engine">🚂</div>
+                                    <div class="train-cabin"></div>
+                                    <div class="train-cabin"></div>
+                                </div>
+                                <div class="train-braking-glow"></div>
+                                <div class="train-label">TRAIN 12345</div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar indicator -->
+                        <div class="sim-timeline-info">
+                            <span>Train Location: <strong id="train-current-km">KM 140.0</strong></span>
+                            <span>Distance to Obstruction: <strong id="train-distance-label">--</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Simulator Controls -->
+                    <div class="controls-grid">
+                        <!-- Train Physics Control -->
+                        <div class="control-group">
+                            <h3>🚂 Train Engine Control</h3>
+                            <div class="control-row">
+                                <label for="train-speed-slider">Set Max Target Speed:</label>
+                                <span class="slider-val-bubble"><span id="speed-slider-val">80</span> km/h</span>
+                            </div>
+                            <input type="range" id="train-speed-slider" min="0" max="120" value="80" class="custom-slider">
+                            
+                            <div class="btn-group">
+                                <button class="btn btn-sec" id="btn-stop-train">Halt Train</button>
+                                <button class="btn btn-primary" id="btn-start-train">Run Train</button>
+                                <button class="btn btn-danger btn-pulse" id="btn-emergency-stop">🚨 EMERGENCY BRAKE</button>
+                            </div>
+                        </div>
+
+                        <!-- Obstruction Injector -->
+                        <div class="control-group">
+                            <h3>⚠️ Obstacle Injector</h3>
+                            <p class="section-desc">Place an obstacle directly in the track section to test sensors & AI detection pipeline.</p>
+                            <div class="obstacle-buttons-grid">
+                                <button class="btn btn-obs" data-obstacle="cow">🐄 Stray Cow</button>
+                                <button class="btn btn-obs" data-obstacle="boulder">🪨 Boulder</button>
+                                <button class="btn btn-obs" data-obstacle="human">🚶 Trespasser</button>
+                                <button class="btn btn-obs" data-obstacle="vehicle">🚗 Stuck Car</button>
+                                <button class="btn btn-obs active" data-obstacle="clear">✅ Clear Track</button>
+                            </div>
+                            <div class="obstacle-position-control">
+                                <label for="obstacle-km-slider">Obstacle Location: <strong id="obstacle-km-val">142.2</strong> KM</label>
+                                <input type="range" id="obstacle-km-slider" min="141.0" max="144.5" step="0.1" value="142.2" class="custom-slider">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Auto Braking Switch -->
+                    <div class="settings-panel">
+                        <div class="toggle-container">
+                            <span class="toggle-label">
+                                <strong>Automatic Braking (Kavach / Auto-Brake Link)</strong>
+                                <span class="toggle-desc">Automatically apply train emergency brakes when sensors verify obstruction.</span>
+                            </span>
+                            <label class="switch">
+                                <input type="checkbox" id="chk-auto-brake" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- COLUMN 2: STATION MASTER DASHBOARD -->
+            <section class="grid-col col-dashboard">
+                <div class="card glass-card fill-height">
+                    <div class="card-header">
+                        <h2>📡 STATION MASTER COMMAND TERMINAL</h2>
+                        <span class="card-subtitle">Real-time IoT grid monitoring & edge telemetry logs</span>
+                    </div>
+
+                    <!-- Telemetry Dashboard -->
+                    <div class="telemetry-grid">
+                        <!-- Sensor Node 1 Health -->
+                        <div class="node-health-card active" id="node1-card">
+                            <div class="card-sub-header">
+                                <span class="node-title">SENSOR NODE #1 (KM 141.5)</span>
+                                <span class="badge badge-success" id="node1-status">ONLINE</span>
+                            </div>
+                            <div class="node-metrics">
+                                <div class="metric">
+                                    <span class="metric-lbl">Ultrasonic</span>
+                                    <span class="metric-val" id="node1-ultra">4.2 m</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-lbl">Vibration</span>
+                                    <span class="metric-val" id="node1-vib">0.02 G</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-lbl">PIR Motion</span>
+                                    <span class="metric-val" id="node1-pir">NO MOTION</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-lbl">Battery / Solar</span>
+                                    <span class="metric-val" id="node1-batt">98% / 4.8V</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sensor Node 2 Health -->
+                        <div class="node-health-card active" id="node2-card">
+                            <div class="card-sub-header">
+                                <span class="node-title">SENSOR NODE #2 (KM 143.5)</span>
+                                <span class="badge badge-success" id="node2-status">ONLINE</span>
+                            </div>
+                            <div class="node-metrics">
+                                <div class="metric">
+                                    <span class="metric-lbl">Ultrasonic</span>
+                                    <span class="metric-val" id="node2-ultra">4.2 m</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-lbl">Vibration</span>
+                                    <span class="metric-val" id="node2-vib">0.02 G</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-lbl">PIR Motion</span>
+                                    <span class="metric-val" id="node2-pir">NO MOTION</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-lbl">Battery / Solar</span>
+                                    <span class="metric-val" id="node2-batt">97% / 4.7V</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sensor Fusion Graph -->
+                    <div class="telemetry-graph-box">
+                        <h3>📈 Live Track Vibration Level (SW-420 Correlation)</h3>
+                        <div class="canvas-container">
+                            <canvas id="vibration-canvas" height="100"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Mesh Signal Network Feed -->
+                    <div class="lora-mesh-box">
+                        <h3>🔄 LoRa WAN Mesh Transmission Protocol</h3>
+                        <div class="mesh-visual-container">
+                            <div class="mesh-node mesh-sensor active" id="mesh-node1">
+                                <div class="mesh-icon">📡</div>
+                                <div class="mesh-label">Node 1</div>
+                            </div>
+                            <div class="mesh-link link-1" id="mesh-link-1"></div>
+                            <div class="mesh-node mesh-sensor active" id="mesh-node2">
+                                <div class="mesh-icon">📡</div>
+                                <div class="mesh-label">Node 2</div>
+                            </div>
+                            <div class="mesh-link link-2" id="mesh-link-2"></div>
+                            <div class="mesh-node mesh-gateway active" id="mesh-gw">
+                                <div class="mesh-icon">🗼</div>
+                                <div class="mesh-label">LoRa Gateway</div>
+                            </div>
+                            <div class="mesh-link link-3" id="mesh-link-3"></div>
+                            <div class="mesh-node mesh-cloud active" id="mesh-cloud">
+                                <div class="mesh-icon">☁️</div>
+                                <div class="mesh-label">Cloud Core</div>
+                            </div>
+                        </div>
+                        <div class="mesh-log" id="mesh-status-text">Network stabilized. Continuous polling at 10Hz.</div>
+                    </div>
+
+                    <!-- System Log / Alerts Timeline -->
+                    <div class="log-timeline-box">
+                        <h3>📋 Station Incident Log & Historical Feed</h3>
+                        <div class="timeline-container" id="incident-timeline">
+                            <div class="timeline-item timeline-system">
+                                <div class="time">17:43:07</div>
+                                <div class="details">Raksha-Netra mesh initialization complete. Gateway connected to Cellular 4G.</div>
+                            </div>
+                            <div class="timeline-item timeline-system">
+                                <div class="time">17:43:09</div>
+                                <div class="details">Edge AI nodes calibration completed. Vibration baseline: 0.02G, Ultrasonic clearance baseline: 4.2m.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- COLUMN 3: LOCO PILOT APP -->
+            <section class="grid-col col-pilot">
+                <div class="mobile-frame-container">
+                    <div class="phone-mockup">
+                        <div class="phone-notch"></div>
+                        <div class="phone-screen">
+                            
+                            <!-- Phone Status Bar -->
+                            <div class="phone-status-bar">
+                                <span class="time-lbl" id="phone-clock">17:43</span>
+                                <div class="phone-icons">
+                                    <span>📶</span>
+                                    <span>📡</span>
+                                    <span>🔋 98%</span>
+                                </div>
+                            </div>
+
+                            <!-- Phone App Header -->
+                            <div class="phone-app-header">
+                                <div class="app-avatar">🧑‍✈️</div>
+                                <div class="app-title-group">
+                                    <span class="app-title-lbl">NETRA-CAB LINK</span>
+                                    <span class="train-id-lbl">Loco: WAP-7 30201 | Tr: 12345</span>
+                                </div>
+                                <button class="btn-horn-test" id="btn-test-horn" title="Test Alert Siren">🔊</button>
+                            </div>
+
+                            <!-- Phone Screen Inner Content -->
+                            <div class="phone-content" id="pilot-app-screen">
+                                
+                                <!-- Normal Mode HUD -->
+                                <div class="hud-normal-view" id="hud-normal">
+                                    
+                                    <!-- Dial Speedometer -->
+                                    <div class="speedometer-box">
+                                        <div class="speed-value" id="pilot-speed-val">80</div>
+                                        <div class="speed-unit">KM/H</div>
+                                        <div class="speed-lbl">Current Speed</div>
+                                        <div class="speed-ring-indicator" id="speed-ring"></div>
+                                    </div>
+
+                                    <!-- Section Clearance Status Card -->
+                                    <div class="clearance-card bg-safe" id="pilot-clearance-status">
+                                        <div class="indicator-glow"></div>
+                                        <div class="card-icon">🟢</div>
+                                        <div class="card-txt">
+                                            <h4>TRACK STATUS: CLEAR</h4>
+                                            <p>Next 5.0 km verified safe. Kavach link synced.</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Next Obstacle Telemetry Info -->
+                                    <div class="pilot-telemetry-hud">
+                                        <div class="telemetry-hud-item">
+                                            <span class="hud-lbl">NEXT NODE</span>
+                                            <span class="hud-val" id="hud-next-node-dist">1.5 km</span>
+                                        </div>
+                                        <div class="telemetry-hud-item">
+                                            <span class="hud-lbl">DECEL TARGET</span>
+                                            <span class="hud-val" id="hud-decel-target">N/A</span>
+                                        </div>
+                                        <div class="telemetry-hud-item" style="grid-column: span 2;">
+                                            <span class="hud-lbl">SYS COUPLING STATUS</span>
+                                            <span class="hud-val text-green">AUTO-BRAKE ACTIVE</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Live Node Snapshot (Simulated Edge Camera) -->
+                                    <div class="edge-cam-panel">
+                                        <div class="panel-header">
+                                            <span>📷 EDGE CAMERA LIVE SNAPSHOT (NODE 1)</span>
+                                            <span class="cam-badge animate-blink" id="hud-cam-status">LIVE FEED</span>
+                                        </div>
+                                        <div class="cam-screen-container">
+                                            <!-- SVG Camera Feed Drawing based on selected object -->
+                                            <svg id="svg-camera-view" viewBox="0 0 320 200" width="100%" height="100%">
+                                                <rect width="100%" height="100%" fill="#1a233a"></rect>
+                                                <!-- Guidelines / Track Grid lines -->
+                                                <path d="M40 200 L140 100 L180 100 L280 200" stroke="#4a5d7c" stroke-width="2" fill="none"></path>
+                                                <path d="M0 160 L320 160" stroke="#2a3d5c" stroke-dasharray="5,5"></path>
+                                                <path d="M0 120 L320 120" stroke="#2a3d5c" stroke-dasharray="5,5"></path>
+                                                <!-- Sleeper hashes -->
+                                                <line x1="120" y1="120" x2="200" y2="120" stroke="#4a5d7c" stroke-width="2"></line>
+                                                <line x1="90" y1="150" x2="230" y2="150" stroke="#4a5d7c" stroke-width="3"></line>
+                                                <line x1="50" y1="190" x2="270" y2="190" stroke="#4a5d7c" stroke-width="4"></line>
+                                                <!-- Dynamic obstacle drawn in JS -->
+                                                <g id="camera-svg-obstacle-group"></g>
+                                                <!-- Scanning line effect -->
+                                                <rect id="scanning-laser" x="0" y="0" width="320" height="2" fill="#00e5ff" opacity="0.7"></rect>
+                                                <!-- Corner overlays -->
+                                                <text x="10" y="25" fill="#00e5ff" font-family="monospace" font-size="10" font-weight="bold">CH1: 320x240 @ 10FPS</text>
+                                                <text x="10" y="190" id="svg-cam-classification-text" fill="#00e5ff" font-family="monospace" font-size="10">CLASSIFICATION: CLEAR</text>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- COLLISION WARNING / DANGER OVERLAY -->
+                                <div class="hud-danger-view" id="hud-danger" style="display: none;">
+                                    <div class="danger-header">
+                                        <span class="warning-blink">⚠️ DANGER: OBSTRUCTION DETECTED</span>
+                                    </div>
+
+                                    <div class="danger-countdown-box">
+                                        <div class="danger-val" id="danger-distance">240m</div>
+                                        <div class="danger-lbl">Distance to Target</div>
+                                        <div class="time-to-collision" id="danger-time-countdown">EST. COLLISION: 8.5s</div>
+                                    </div>
+
+                                    <!-- Obstruction Image & Info -->
+                                    <div class="danger-snapshot-box">
+                                        <div class="snapshot-header">
+                                            <span id="danger-ai-class">🐄 BOVINE DETECTED</span>
+                                            <span class="badge badge-danger" id="danger-ai-conf">98% CONF</span>
+                                        </div>
+                                        <div class="danger-snap-img-box">
+                                            <svg id="svg-camera-danger-view" viewBox="0 0 320 180" width="100%" height="100%">
+                                                <!-- Cloned via JS from the main canvas / SVG camera view -->
+                                            </svg>
+                                            <div class="threat-badge-overlay" id="danger-threat-badge">CRITICAL THREAT</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- AI Detection Pipeline Breakdown -->
+                                    <div class="sensor-fusion-breakdown">
+                                        <div class="fusion-step step-checked">
+                                            <span class="step-check-icon">✓</span>
+                                            <span class="step-lbl">Ultrasonic (<span id="danger-val-ultra">1.8m</span>)</span>
+                                        </div>
+                                        <div class="fusion-step step-checked">
+                                            <span class="step-check-icon">✓</span>
+                                            <span class="step-lbl">PIR Motion Sensor</span>
+                                        </div>
+                                        <div class="fusion-step step-checked">
+                                            <span class="step-check-icon">✓</span>
+                                            <span class="step-lbl">Track Impact Vibration</span>
+                                        </div>
+                                        <div class="fusion-step step-checked">
+                                            <span class="step-check-icon">✓</span>
+                                            <span class="step-lbl">TFLite TinyML Confirm</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Pilot Action Area -->
+                                    <div class="pilot-action-area">
+                                        <button class="btn-emergency-action animate-danger-pulse" id="btn-pilot-brake">
+                                            <span>🚨 PRESS TO TRIGGER EMERGENCY BRAKE</span>
+                                        </button>
+                                        <button class="btn-pilot-clear" id="btn-pilot-override">
+                                            <span>⚠️ FALSE ALARM / CLEAR SECTION OVERRIDE</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- HACKATHON PITCH DECK MODAL -->
+    <div class="modal-overlay" id="pitch-modal" style="display: none;">
+        <div class="modal-card glass-card">
+            <div class="modal-header">
+                <div class="modal-logo-group">
+                    <span class="modal-logo-icon">🛡️</span>
+                    <div>
+                        <h2>🚂 Project RAKSHA-NETRA</h2>
+                        <span class="modal-subtitle">AI-Powered Real-Time Track Obstruction Detection System</span>
+                    </div>
+                </div>
+                <button class="btn-close-modal" id="btn-close-pitch">×</button>
+            </div>
+            
+            <div class="modal-tabs">
+                <button class="tab-btn active" data-tab="tab-problem">🚨 The Problem & Gap</button>
+                <button class="tab-btn" data-tab="tab-solution">⚙️ Technical Solution</button>
+                <button class="tab-btn" data-tab="tab-business">💼 Cost & Scale</button>
+                <button class="tab-btn" data-tab="tab-qa">❓ Judge Q&A</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Tab: Problem -->
+                <div class="tab-content active" id="tab-problem">
+                    <div class="tab-layout-grid">
+                        <div>
+                            <h3>The Human & Economic Tragedy</h3>
+                            <p class="tab-text-highlight">Every year, over <strong>2,000 train accidents</strong> in India occur due to physical obstructions on railway tracks, resulting in loss of life and massive delays.</p>
+                            <p>Obstructions include stray cattle, fallen trees, boulders from landslides, vehicles stuck at level crossings, and trespassers. The impact is staggering:</p>
+                            <ul>
+                                <li><strong>2,000+ Preventable Deaths</strong> annually.</li>
+                                <li><strong>₹300 Crore+</strong> in direct economic damage.</li>
+                                <li><strong>Severe operational delays</strong> cascading across the entire linear network.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3>Why Current Systems Fail</h3>
+                            <table class="pitch-table">
+                                <thead>
+                                    <tr>
+                                        <th>Alternative Solution</th>
+                                        <th>Critical Limitation & Gaps</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Manual Patrolling</strong></td>
+                                        <td>Covers only 15% of track-time. Gangmen cover only 8-10 km/day. Human fatigue is a major factor.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Drone Surveillance</strong></td>
+                                        <td>Extremely expensive, battery limited, struggles in high wind/night/fog. Cannot run 24/7.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>CCTV Cameras</strong></td>
+                                        <td>Requires 24/7 human monitoring. Video feeds drop in bad weather, and no automatic loco alerts.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Kavach / ETCS</strong></td>
+                                        <td>Handles signal compliance and collision between trains, but <strong>cannot detect objects</strong> on the track.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Radar-based systems</strong></td>
+                                        <td>Astronomically high cost (₹50 Lakh+ per km). Unrealistic for a 68,000 km network.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Solution -->
+                <div class="tab-content" id="tab-solution">
+                    <div class="tab-layout-grid">
+                        <div>
+                            <h3>The Innovation: Edge AI Multi-Sensor Fusion</h3>
+                            <p>RAKSHA-NETRA places low-cost, self-powered node clusters at regular track intervals. By fusing four distinct sensor readings, we achieve zero dependency on high-bandwidth cloud processing while removing false positives:</p>
+                            
+                            <div class="sensor-fusion-infographic">
+                                <div class="info-node">
+                                    <div class="info-icon">🔊</div>
+                                    <h4>Ultrasonic (HC-SR04)</h4>
+                                    <p>Continually scans the track geometry distance profile (10Hz pings).</p>
+                                </div>
+                                <div class="info-node">
+                                    <div class="info-icon">🏃</div>
+                                    <h4>PIR Sensor</h4>
+                                    <p>Detects thermal motion patterns to identify living organisms.</p>
+                                </div>
+                                <div class="info-node">
+                                    <div class="info-icon">📳</div>
+                                    <h4>Vibration (SW-420)</h4>
+                                    <p>Correlates kinetic impact on rails (e.g. falling boulders vs. wind).</p>
+                                </div>
+                                <div class="info-node">
+                                    <div class="info-icon">🧠</div>
+                                    <h4>Edge AI (ESP32-CAM)</h4>
+                                    <p>Runs a highly compressed, INT8-quantized TFLite Micro model locally.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3>How The Network Communicates</h3>
+                            <p><strong>LoRa WAN Mesh Networking</strong>: In remote areas with poor cellular signal (tunnels, mountains, forests), nodes communicate with each other using LoRa sub-GHz waves, hopping packets to a single cellular gateway, reducing operational costs.</p>
+                            <p><strong>Triple-Redundant Verification</strong>:</p>
+                            <ol>
+                                <li><strong>Single Sensor:</strong> Logs warning status.</li>
+                                <li><strong>Sensor Fusion:</strong> Dispatches visual capture trigger.</li>
+                                <li><strong>Edge AI + Vibration:</strong> Confirms threat, calculates vector, transmits audio alert to loco pilot, and initiates automatic braking protocol.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Business -->
+                <div class="tab-content" id="tab-business">
+                    <div class="tab-layout-grid">
+                        <div>
+                            <h3>Hackathon Prototype Cost (₹3,030)</h3>
+                            <table class="pitch-table highlight-table">
+                                <thead>
+                                    <tr>
+                                        <th>Component</th>
+                                        <th>Purpose</th>
+                                        <th>Cost (₹)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>ESP32-CAM</td>
+                                        <td>Edge Vision AI + Camera Hub</td>
+                                        <td>₹800</td>
+                                    </tr>
+                                    <tr>
+                                        <td>LoRa SX1278 Module</td>
+                                        <td>Long-range node telemetry</td>
+                                        <td>₹400</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Solar Panel & Batteries</td>
+                                        <td>6V 2W Panel + 4x 18650 Li-ion cells</td>
+                                        <td>₹700</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sensor Cluster</td>
+                                        <td>HC-SR04, PIR, SW-420 Vibration</td>
+                                        <td>₹380</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mechanical & Structure</td>
+                                        <td>IP67 3D Printed box, Enclosures, Tracks</td>
+                                        <td>₹750</td>
+                                    </tr>
+                                    <tr class="table-total-row">
+                                        <td colspan="2">TOTAL PROTOTYPE BUDGET</td>
+                                        <td>₹3,030</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div>
+                            <h3>Production Cost Advantage (167x Cheaper)</h3>
+                            <p>While radar systems cost ₹50,00,000 per km, RAKSHA-NETRA is built with industrial reliability at scale for a fraction of the cost:</p>
+                            <ul>
+                                <li><strong>Production Cost per Node:</strong> ₹12,000 (with IP67 housing).</li>
+                                <li><strong>Per KM (3 Node clusters):</strong> ₹36,000.</li>
+                                <li><strong>Moat:</strong> Over 150x cost advantage, making nationwide deployment achievable.</li>
+                            </ul>
+                            <h3>National Deployment Plan</h3>
+                            <p><strong>Total Coverage Budget:</strong> ₹200 Crore to cover all 68,000 km of Indian Railways (less than 0.3% of the annual safety budget).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Q&A -->
+                <div class="tab-content" id="tab-qa">
+                    <div class="qa-grid">
+                        <div class="qa-item">
+                            <h4>Q: How do you handle weather conditions (fog, heavy rain)?</h4>
+                            <p><strong>A:</strong> Sensor fusion handles atmospheric failures. Ultrasonic sensors pierce fog and dust storms easily. Vibration sensors register physical impact regardless of visibility. When visibility clears, infrared LEDs on the ESP32-CAM illuminate the path for TinyML confirmation.</p>
+                        </div>
+                        <div class="qa-item">
+                            <h4>Q: What is the battery autonomy in remote areas?</h4>
+                            <p><strong>A:</strong> Nodes default to ultra-low-power sleep mode (<50mA draw). Ultrasonic/vibration threshold interrupts wake the ESP32-CAM only when anomalous data presents. A 6W solar cell + 18650 lithium cells provide 72+ hours of complete autonomy without sun.</p>
+                        </div>
+                        <div class="qa-item">
+                            <h4>Q: What stops someone from stealing or tampering with the nodes?</h4>
+                            <p><strong>A:</strong> Every node has an integrated 3-axis accelerometer and vibration sensor. If a node is moved, tilted, or opened, a tamper alert is sent instantly to the Station Master with the camera's final visual capture, accompanied by a loud local piezo siren.</p>
+                        </div>
+                        <div class="qa-item">
+                            <h4>Q: How does this interface with existing systems?</h4>
+                            <p><strong>A:</strong> We output JSON strings using standard protocols. This interfaces seamlessly with Kavach onboard units, station block-instrument relay systems, and telemetry consoles via simple API adapters.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <p>💡 <em>Project Raksha-Netra: Saving lives through edge AI & sensor fusion.</em></p>
+                <button class="btn btn-sec" id="btn-close-pitch-footer">Close Presentation</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>
