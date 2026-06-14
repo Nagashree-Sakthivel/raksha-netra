@@ -1,0 +1,62 @@
+# Walkthrough - Project RAKSHA-NETRA Simulator
+
+We have successfully built and verified the software application for **Project RAKSHA-NETRA** 
+
+This application functions as a high-fidelity interactive simulation and an interactive pitch deck for hackathon judges, presenting the technical architecture, operational user interfaces, and business model in a cohesive, premium web dashboard.
+
+
+## 📁 Files Created
+
+1. **[index.html](file:///C:/Users/nagas/.gemini/antigravity-ide/scratch/raksha-netra/index.html)**: Defines the structural grid of the application, splitting it into a simulated Physical Track simulator, the Station Master command console, the Loco Pilot smartphone app, and a modal containing the Pitch Deck slides.
+2. **[style.css](file:///C:/Users/nagas/.gemini/antigravity-ide/scratch/raksha-netra/style.css)**: Implements the visual styling including a slate dark mode, futuristic glowing nodes, glassmorphic panels, keyframe flashing alarms, and a bezel smartphone mockup frame.
+3. **[app.js](file:///C:/Users/nagas/.gemini/antigravity-ide/scratch/raksha-netra/app.js)**: Implements the logic loops (10Hz sampling check), train speed/braking physics, multi-sensor voting logic, LoRa mesh hops, real-time vibration scrolling canvas graph, dynamic SVG vision drawings, and synthetic audio siren.
+4. **[server.ps1](file:///C:/Users/nagas/.gemini/antigravity-ide/scratch/raksha-netra/server.ps1)**: A native, lightweight PowerShell web server utilizing built-in .NET classes (`HttpListener`) to serve files locally on port `8888` without any external package dependencies.
+
+---
+
+## 📸 Verification Results & Screenshots
+
+The application was verified using a browser subagent checking the local server endpoint [(https://nagashree-sakthivel.github.io/raksha-netra/)
+**Below is the step-by-step visual walkthrough of the verification run:1**
+
+````carousel
+![Initial Dashboard Layout](file:///C:/Users/nagas/.gemini/antigravity-ide/brain/83104e36-7135-4b37-84f3-dccbe6ff03a5/initial_dashboard_1781180826761.png)
+<!-- slide -->
+![Pitch Deck Modal (Technical Solution Tab)](file:///C:/Users/nagas/.gemini/antigravity-ide/brain/83104e36-7135-4b37-84f3-dccbe6ff03a5/technical_solution_tab_1781180856456.png)
+<!-- slide -->
+![Loco Pilot HUD - Danger Alarm Flashing](file:///C:/Users/nagas/.gemini/antigravity-ide/brain/83104e36-7135-4b37-84f3-dccbe6ff03a5/train_braking_1781180934946.png)
+<!-- slide -->
+![Train Safe Stop Triggered](file:///C:/Users/nagas/.gemini/antigravity-ide/brain/83104e36-7135-4b37-84f3-dccbe6ff03a5/train_stopped_1781180951454.png)
+````
+
+### Summary of Simulated Actions:
+1. **Pitch Deck Presentation**: Triggered the presentation slides modal. The modal features responsive tabs including "The Problem & Gap", "Technical Solution", "Cost & Scale", and "Judge Q&A" (shown in Slide 2).
+2. **Train Motion**: Started the train. The locomotive travels along the 2D visual rail model in real-time, calculating location markers.
+3. **Obstruction Injection**: Injected a **Stray Cow** obstacle at KM 142.2.
+4. **Sensor Fusion Voting**:
+   * Sensor Node #1 (KM 141.5) immediately picks up the obstacle.
+   * Distance telemetry drops from 4.2m to 1.6m.
+   * PIR motion sensor reports "MOTION DETECTED".
+   * Node status switches to **ALERT ACTIVE** in the Station Master Panel.
+5. **LoRa Mesh Broadcast**: The LoRa mesh animation initiates. Wireless hops flow from Node 1 -> Node 2 -> Gateway -> Cloud, logging mesh data (e.g. RSSI metrics).
+6. **Loco Pilot Cab Notification**:
+   * As the train enters the danger zone (within 1.8km), the Loco Pilot's HUD transitions to the red **DANGER** layout (shown in Slide 3).
+   * A synthesized alert audio alarm sweeps to alert the operator.
+   * A dynamic camera snapshot showing a vector illustration of the stray cow on the tracks is sent from the node and displayed in the cab.
+   * An active countdown starts showing distance and estimated time-to-collision.
+7. **Emergency Stop**: The Auto-Brake Link triggers the train's deceleration system, bringing the speed to 0 km/h. The train stops safely (Slide 4) and logs `🛡️ ACCIDENT AVERTED! Train stopped safely`.
+8. **Simulator Reset**: Clicking "Clear Track" terminates the alarm, clears the danger HUD, and resets the system status to SECURE.
+
+---
+
+## 🚀 How to Run Locally
+
+If you want to view or demonstrate this application locally:
+
+
+  
+1. **Access the Interface**:
+   Open your browser and navigate to:
+  https://nagashree-sakthivel.github.io/raksha-netra/
+2. **Control options**:
+   Use the sliders to adjust train target speed and obstacle location, or click the obstacle buttons to inject targets.
